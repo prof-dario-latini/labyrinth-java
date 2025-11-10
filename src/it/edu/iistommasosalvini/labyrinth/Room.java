@@ -43,4 +43,12 @@ public class Room {
     occupants.remove(persona);
     return true;
   }
+  
+  public List<Persona> getOccupants() {
+	  return occupants;
+  }
+  
+  public int getOccupantsNumber() {
+	  return occupants.size();
+  }
 }

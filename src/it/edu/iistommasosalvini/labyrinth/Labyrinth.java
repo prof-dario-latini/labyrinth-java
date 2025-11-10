@@ -39,6 +39,7 @@ public class Labyrinth {
     for (int r = 0; r < nRows; r++) {
       for (int c = 0; c < nColumns; c++) {
         Position position = new Position(r, c);
+        positions[r][c] = position;
         Room room = new Room(
             r > 0,
             r < nRows -1,
@@ -75,17 +76,18 @@ public class Labyrinth {
     return end;
   }
 
-  public Room getFreeRoom() {
+  public Room searchFreeRoom() {
     if (this.nRows * this.nRows < 3) {
       System.out.println("No free room");
       return null;
     }
     for (int r = this.nRows - 1; r >= 0; r--) {
       for (int c = this.nColumns - 1; c >= 0; c--) {
-        // TODO
-        // if (this.rooms[r][c] != this.start && this.rooms[r][c] != this.end) {
-        //   boolean occupied = false;
-        // }
+    	Position position = new Position(r, c);
+    	Room room = this.rooms.get(position);
+        if ( room != this.start && room != this.end && room.getOccupantsNumber() == 0) {
+        	return room;
+        }
       }
     }
 

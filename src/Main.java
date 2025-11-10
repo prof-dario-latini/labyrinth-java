@@ -15,11 +15,12 @@ public class Main {
     System.out.println("What is your hero name?");
     Scanner in = new Scanner(System.in);
     Persona hero = new Hero(in.nextLine(), 3);
+    hero.joinLabyrinth(labyrinth);
     System.out.println(hero.getName() + " your journey begins!'");
     Labyrinth.printCommands();
     String command;
 
-    System.out.println("You are in the room" + hero.getActualRoom().getPosition().toString());
+    System.out.println("You are in the room" + hero.getPosition().toString());
 
     do {
       command = in.nextLine().trim().toUpperCase();
@@ -41,12 +42,14 @@ public class Main {
         Labyrinth.printCommands();
       }
 
-    } while (!hero.getActualRoom().equals(labyrinth.getEnd()));
+    } while (!hero.getPosition().equals(labyrinth.getEnd().getPosition()));
 
     if (command.equals("QUIT")) {
       System.out.println(hero.getName() + " quits... you better try hard next time.");
     } else {
       System.out.println(hero.getName() + " wins!");
     }
+    
+    in.close();
   }
 }
