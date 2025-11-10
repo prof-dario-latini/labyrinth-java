@@ -26,9 +26,9 @@ public class Labyrinth {
       this.nColumns = columns <= 0 ? 1 : columns;
       this.positions = new Position[this.nRows][this.nColumns];
       this.rooms = Labyrinth.generateRooms(this.positions);
-      this.monsters = Labyrinth.generateMonsters(this.positions);
       this.start = this.rooms.get(this.positions[0][0]);
       this.end = this.rooms.get(this.positions[this.nRows - 1][this.nColumns - 1]);
+      this.placeMonsters();
   }
 
   static Map<Position, Room> generateRooms(Position[][] positions) {
@@ -64,6 +64,25 @@ public class Labyrinth {
     return monsters;
   }
 
+  public int placeMonsters() {
+	  this.monsters = Labyrinth.generateMonsters(this.positions);
+	  int joinedMonsters = 0;
+	  for (int m=0; m< monsters.size(); m++) {
+		  Room freeRoom = searchFreeRoom();
+		  if (freeRoom == null) {
+			break;  
+		  }
+		  Monster monster = monsters.get(m);
+		  monster.joinLabyrinth(this);
+		  monster.setPosition(freeRoom.getPosition());
+		  freeRoom.enter(monster);
+		  System.out.println("Monster "+ monster.getName() +" entered in the labyrinth at room "+ freeRoom.getPosition().toString());
+		  joinedMonsters++;
+	  }
+	  
+	  return joinedMonsters;
+  }
+  
   public Room getStart() {
     return start;
   }
@@ -96,33 +115,52 @@ public class Labyrinth {
 
   public boolean changeRoom(Persona persona, Direction direction) {
     Position personaPosition = persona.getPosition();
-    Room actualRoom = rooms.get(personaPosition);
+    Room currentRoom = rooms.get(personaPosition);
+    Room newRoom;
+    boolean canMove = false;
+    Position newPosition = null;
 
-    if (!actualRoom.hasDoor(direction)) {
+    if (!currentRoom.hasDoor(direction)) {
       System.out.println("No way");
       return false;
     }
+    
 
     switch (direction) {
       case NORD -> {
-        persona.setPosition(this.positions[personaPosition.row() - 1][personaPosition.column()]);
+    	  newPosition = this.positions[personaPosition.row() - 1][personaPosition.column()];
       }
       case SUD -> {
-        persona.setPosition(this.positions[personaPosition.row() + 1][personaPosition.column()]);
+    	  newPosition = this.positions[personaPosition.row() + 1][personaPosition.column()];
       }
       case WEST -> {
-        persona.setPosition(this.positions[personaPosition.row()][personaPosition.column() - 1]);
+    	  newPosition = this.positions[personaPosition.row()][personaPosition.column() - 1];
       }
       case EST -> {
-        persona.setPosition(this.positions[personaPosition.row()][personaPosition.column() + 1]);
+    	  newPosition = this.positions[personaPosition.row()][personaPosition.column() + 1];
       }
     }
-
-    if (this.rooms.get(persona.getPosition()).enter(persona)) {
-      this.rooms.get(actualRoom.getPosition()).leave(persona);
+    
+    if (newPosition == null) {
+    	return false;
+    }
+    
+    newRoom = this.rooms.get(newPosition);
+    
+    canMove = newRoom.enter(persona);
+    
+    if (canMove) {
+      persona.setPosition(newPosition);	
+      this.rooms.get(currentRoom.getPosition()).leave(persona);
+      if (newRoom.getOccupantsNumber() > 1) {
+    	  System.out.println("You are not alone...");
+      }
+    } else {
+    	System.out.println("No way");
     }
 
     System.out.println("You are in the room: " + persona.getPosition().toString());
+    
 
     return true;
   }
