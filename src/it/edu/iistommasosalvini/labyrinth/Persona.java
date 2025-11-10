@@ -69,13 +69,16 @@ public class Persona {
     this.position = position;
   }
 
-  public void move(Direction direction) {
+  public Position move(Direction direction) {
     if (this.labyrinth == null) {
       System.out.println("Error: "+ this.name +" is not in the labyrinth!");
-      return;
+      return null;
     }
     if (this.labyrinth.changeRoom(this, direction)) {
       this.movements.add(direction);
+      return this.position;
     }
+    
+    return null;
   }
 }

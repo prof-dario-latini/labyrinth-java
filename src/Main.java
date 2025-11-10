@@ -33,9 +33,15 @@ public class Main {
         continue;
       }
 
-      try {
+      try {  
         Direction direction = Direction.valueOf(command);
         hero.move(direction);
+        labyrinth.moveMonsters();
+        System.out.println("You are in the room: " + hero.getPosition().toString());
+        
+        if (labyrinth.getRoomByPosition(hero.getPosition()).getOccupantsNumber() > 1) {
+      	  System.out.println("You are not alone...");
+        }
 
       } catch (IllegalArgumentException e ) {
         System.out.println("Invalid direction!");

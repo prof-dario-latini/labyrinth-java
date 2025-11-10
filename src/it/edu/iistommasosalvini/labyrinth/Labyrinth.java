@@ -67,7 +67,7 @@ public class Labyrinth {
   public int placeMonsters() {
 	  this.monsters = Labyrinth.generateMonsters(this.positions);
 	  int joinedMonsters = 0;
-	  for (int m=0; m< monsters.size(); m++) {
+	  for (int m = 0; m < monsters.size(); m++) {
 		  Room freeRoom = searchFreeRoom();
 		  if (freeRoom == null) {
 			break;  
@@ -76,11 +76,20 @@ public class Labyrinth {
 		  monster.joinLabyrinth(this);
 		  monster.setPosition(freeRoom.getPosition());
 		  freeRoom.enter(monster);
-		  System.out.println("Monster "+ monster.getName() +" entered in the labyrinth at room "+ freeRoom.getPosition().toString());
+		  System.out.println("Monster "+ monster.getName() +" entered in the labyrinth at room "+ monster.getPosition().toString());
 		  joinedMonsters++;
 	  }
 	  
 	  return joinedMonsters;
+  }
+  
+  public boolean moveMonsters() {
+	  for (int m = 0; m < monsters.size(); m++) {
+		  Monster monster = monsters.get(m);
+		  monster.routine();
+		  System.out.println("Monster " + monster.getName() + "is in the room " + monster.getPosition().toString());
+	  }
+	  return false;
   }
   
   public Room getStart() {
@@ -95,6 +104,10 @@ public class Labyrinth {
     return end;
   }
 
+  public Room getRoomByPosition(Position position) {
+	  return rooms.get(position);
+  }
+  
   public Room searchFreeRoom() {
     if (this.nRows * this.nRows < 3) {
       System.out.println("No free room");
@@ -152,15 +165,9 @@ public class Labyrinth {
     if (canMove) {
       persona.setPosition(newPosition);	
       this.rooms.get(currentRoom.getPosition()).leave(persona);
-      if (newRoom.getOccupantsNumber() > 1) {
-    	  System.out.println("You are not alone...");
-      }
     } else {
     	System.out.println("No way");
     }
-
-    System.out.println("You are in the room: " + persona.getPosition().toString());
-    
 
     return true;
   }
