@@ -1,4 +1,5 @@
 import it.edu.iistommasosalvini.labyrinth.Direction;
+import it.edu.iistommasosalvini.labyrinth.Hero;
 import it.edu.iistommasosalvini.labyrinth.Labyrinth;
 import it.edu.iistommasosalvini.labyrinth.Persona;
 
@@ -13,7 +14,7 @@ public class Main {
 
     System.out.println("What is your hero name?");
     Scanner in = new Scanner(System.in);
-    Persona hero = new Persona(labyrinth, in.nextLine());
+    Persona hero = new Hero(in.nextLine(), 3);
     System.out.println(hero.getName() + " your journey begins!'");
     Labyrinth.printCommands();
     String command;

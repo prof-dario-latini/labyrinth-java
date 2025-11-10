@@ -1,10 +1,14 @@
 package it.edu.iistommasosalvini.labyrinth;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.List;
 
 public class Room {
   private final EnumMap<Direction, Boolean> doors;
   private final Position position;
+  private final List<Persona> occupants;
+  // private final int capacity;
 
   public Room(
       boolean nord,
@@ -18,6 +22,7 @@ public class Room {
     this.doors.put(Direction.SUD, sud);
     this.doors.put(Direction.WEST, west);
     this.doors.put(Direction.EST, est);
+    this.occupants = new ArrayList<>();
     this.position = position;
   }
 
@@ -27,5 +32,15 @@ public class Room {
 
   public boolean hasDoor(Direction direction) {
     return this.doors.get(direction);
+  }
+
+  public boolean enter(Persona persona) {
+    occupants.add(persona);
+    return true;
+  }
+
+  public boolean leave(Persona persona) {
+    occupants.remove(persona);
+    return true;
   }
 }

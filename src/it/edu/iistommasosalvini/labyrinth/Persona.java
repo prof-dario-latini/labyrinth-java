@@ -1,26 +1,30 @@
 package it.edu.iistommasosalvini.labyrinth;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Persona {
   private String name;
   private int life;
   private final int maxLife;
-  private Room actualRoom;
-  private ArrayList<Direction> movements;
-  private final Labyrinth labyrinth;
+  private Position position;
+  private final List<Direction> movements;
+  private Labyrinth labyrinth;
 
-  public Persona(Labyrinth labyrinth, String name) {
-    this(labyrinth, name, 1);
+  public Persona(String name) {
+    this(name, 1);
   }
 
-  public Persona(Labyrinth labyrinth, String name, int life) {
-    this.labyrinth = labyrinth;
+  public Persona(String name, int life) {
     this.name = name;
     this.life = life;
     this.maxLife = life;
-    this.actualRoom = this.labyrinth.getStart();
     this.movements = new ArrayList<>();
+  }
+
+  public void joinLabyrinth(Labyrinth labyrinth) {
+    this.labyrinth = labyrinth;
+    this.position = this.labyrinth.getStartPosition();
   }
 
   public String getName() {
@@ -57,15 +61,19 @@ public class Persona {
     return this.getLife();
   }
 
-  public Room getActualRoom() {
-    return actualRoom;
+  public Position getPosition() {
+    return position;
   }
 
-  public void setActualRoom(Room actualRoom) {
-    this.actualRoom = actualRoom;
+  public void setPosition(Position position) {
+    this.position = position;
   }
 
   public void move(Direction direction) {
+    if (this.labyrinth == null) {
+      System.out.println("Error: "+ this.name +" is not in the labyrinth!");
+      return;
+    }
     if (this.labyrinth.changeRoom(this, direction)) {
       this.movements.add(direction);
     }
