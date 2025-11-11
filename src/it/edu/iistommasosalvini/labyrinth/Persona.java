@@ -9,7 +9,7 @@ public class Persona {
   private final int maxLife;
   private Position position;
   private final List<Direction> movements;
-  private Labyrinth labyrinth;
+  protected Labyrinth labyrinth;
 
   public Persona(String name) {
     this(name, 1);
@@ -24,7 +24,6 @@ public class Persona {
 
   public void joinLabyrinth(Labyrinth labyrinth) {
     this.labyrinth = labyrinth;
-    this.position = this.labyrinth.getStartPosition();
   }
 
   public String getName() {
@@ -78,7 +77,7 @@ public class Persona {
       this.movements.add(direction);
       return this.position;
     }
-    
+
     return null;
   }
 }

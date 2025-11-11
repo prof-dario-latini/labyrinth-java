@@ -64,25 +64,29 @@ public class Labyrinth {
     return monsters;
   }
 
+  public Position placeHero(Hero hero) {
+    start.enter(hero);
+    return start.getPosition();
+  }
+
   public int placeMonsters() {
 	  this.monsters = Labyrinth.generateMonsters(this.positions);
 	  int joinedMonsters = 0;
-	  for (int m = 0; m < monsters.size(); m++) {
-		  Room freeRoom = searchFreeRoom();
-		  if (freeRoom == null) {
-			break;  
-		  }
-		  Monster monster = monsters.get(m);
-		  monster.joinLabyrinth(this);
-		  monster.setPosition(freeRoom.getPosition());
-		  freeRoom.enter(monster);
-		  System.out.println("Monster "+ monster.getName() +" entered in the labyrinth at room "+ monster.getPosition().toString());
-		  joinedMonsters++;
-	  }
-	  
+    for (Monster monster : monsters) {
+      Room freeRoom = searchFreeRoom();
+      if (freeRoom == null) {
+        break;
+      }
+      monster.joinLabyrinth(this);
+      monster.setPosition(freeRoom.getPosition());
+      freeRoom.enter(monster);
+      System.out.println("Monster " + monster.getName() + " entered in the labyrinth at room " + monster.getPosition().toString());
+      joinedMonsters++;
+    }
+
 	  return joinedMonsters;
   }
-  
+
   public boolean moveMonsters() {
 	  for (int m = 0; m < monsters.size(); m++) {
 		  Monster monster = monsters.get(m);
@@ -91,7 +95,20 @@ public class Labyrinth {
 	  }
 	  return false;
   }
-  
+
+  public boolean movePersonaToRoomByPosition(Persona persona, Position position) {
+    Room room = this.rooms.get(position);
+    return room.enter(persona);
+  }
+
+  public Position[][] getPositions() {
+    return positions;
+  }
+
+  public Map<Position, Room> getRooms() {
+    return rooms;
+  }
+
   public Room getStart() {
     return start;
   }
@@ -107,7 +124,7 @@ public class Labyrinth {
   public Room getRoomByPosition(Position position) {
 	  return rooms.get(position);
   }
-  
+
   public Room searchFreeRoom() {
     if (this.nRows * this.nRows < 3) {
       System.out.println("No free room");
@@ -137,7 +154,7 @@ public class Labyrinth {
       System.out.println("No way");
       return false;
     }
-    
+
 
     switch (direction) {
       case NORD -> {
@@ -153,17 +170,17 @@ public class Labyrinth {
     	  newPosition = this.positions[personaPosition.row()][personaPosition.column() + 1];
       }
     }
-    
+
     if (newPosition == null) {
     	return false;
     }
-    
+
     newRoom = this.rooms.get(newPosition);
-    
+
     canMove = newRoom.enter(persona);
-    
+
     if (canMove) {
-      persona.setPosition(newPosition);	
+      persona.setPosition(newPosition);
       this.rooms.get(currentRoom.getPosition()).leave(persona);
     } else {
     	System.out.println("No way");

@@ -1,7 +1,4 @@
-import it.edu.iistommasosalvini.labyrinth.Direction;
-import it.edu.iistommasosalvini.labyrinth.Hero;
-import it.edu.iistommasosalvini.labyrinth.Labyrinth;
-import it.edu.iistommasosalvini.labyrinth.Persona;
+import it.edu.iistommasosalvini.labyrinth.*;
 
 import java.util.Scanner;
 
@@ -19,10 +16,12 @@ public class Main {
     System.out.println(hero.getName() + " your journey begins!'");
     Labyrinth.printCommands();
     String command;
-
-    System.out.println("You are in the room" + hero.getPosition().toString());
+    System.out.println("Enter any key to start");
+    in.next();
+    TextUI.clearScreen();
 
     do {
+      System.out.println("You are in the room" + hero.getPosition().toString());
       command = in.nextLine().trim().toUpperCase();
       if (command.equals("QUIT")) {
         break;
@@ -33,12 +32,13 @@ public class Main {
         continue;
       }
 
-      try {  
+      TextUI.clearScreen();
+
+      try {
         Direction direction = Direction.valueOf(command);
         hero.move(direction);
         labyrinth.moveMonsters();
-        System.out.println("You are in the room: " + hero.getPosition().toString());
-        
+
         if (labyrinth.getRoomByPosition(hero.getPosition()).getOccupantsNumber() > 1) {
       	  System.out.println("You are not alone...");
         }
@@ -48,6 +48,8 @@ public class Main {
         Labyrinth.printCommands();
       }
 
+      TextUI.printLabyrinth(labyrinth);
+
     } while (!hero.getPosition().equals(labyrinth.getEnd().getPosition()));
 
     if (command.equals("QUIT")) {
@@ -55,7 +57,7 @@ public class Main {
     } else {
       System.out.println(hero.getName() + " wins!");
     }
-    
+
     in.close();
   }
 }
