@@ -5,12 +5,12 @@ import java.util.List;
 
 public class Monster extends Persona{
   List<Direction> availableDirections = new ArrayList<>();
-	
+
   public Monster(String name) {
     super(name);
-    
+
   }
-  
+
   private void initAvailableDirections() {
 	  availableDirections.clear();
 	  availableDirections.add(Direction.NORD);
@@ -18,18 +18,18 @@ public class Monster extends Persona{
 	  availableDirections.add(Direction.WEST);
 	  availableDirections.add(Direction.EST);
   }
-  
+
   public void routine() {
 	 initAvailableDirections();
-	 boolean canMove = false;
+	 boolean canMove;
 	 do {
 		int nextMove = (int) (Math.random() * (availableDirections.size() - 1));
-		System.out.println("nextMove " + nextMove);
+		// System.out.println("nextMove " + nextMove);
 		Direction direction = availableDirections.get(nextMove);
 		canMove = this.move(direction) != null;
 		if (!canMove) {
 			availableDirections.remove(nextMove);
 		}
-	 } while (availableDirections.size() > 0 && canMove == false);
+	 } while (!availableDirections.isEmpty() && !canMove);
   }
 }

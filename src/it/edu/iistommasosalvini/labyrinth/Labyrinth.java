@@ -64,6 +64,13 @@ public class Labyrinth {
     return monsters;
   }
 
+  static void alertPlayer(String message, Persona persona) {
+    if (persona.getClass() != Hero.class) {
+      return;
+    }
+    System.out.println(message);
+  }
+
   public Position placeHero(Hero hero) {
     start.enter(hero);
     return start.getPosition();
@@ -80,7 +87,7 @@ public class Labyrinth {
       monster.joinLabyrinth(this);
       monster.setPosition(freeRoom.getPosition());
       freeRoom.enter(monster);
-      System.out.println("Monster " + monster.getName() + " entered in the labyrinth at room " + monster.getPosition().toString());
+      // System.out.println("Monster " + monster.getName() + " entered in the labyrinth at room " + monster.getPosition().toString());
       joinedMonsters++;
     }
 
@@ -91,7 +98,7 @@ public class Labyrinth {
 	  for (int m = 0; m < monsters.size(); m++) {
 		  Monster monster = monsters.get(m);
 		  monster.routine();
-		  System.out.println("Monster " + monster.getName() + "is in the room " + monster.getPosition().toString());
+		  // System.out.println("Monster " + monster.getName() + "is in the room " + monster.getPosition().toString());
 	  }
 	  return false;
   }
@@ -147,11 +154,12 @@ public class Labyrinth {
     Position personaPosition = persona.getPosition();
     Room currentRoom = rooms.get(personaPosition);
     Room newRoom;
-    boolean canMove = false;
     Position newPosition = null;
+    boolean canMove = false;
+    boolean alreadyOccupied = false;
 
     if (!currentRoom.hasDoor(direction)) {
-      System.out.println("No way");
+      Labyrinth.alertPlayer("No way", persona);
       return false;
     }
 
@@ -177,13 +185,24 @@ public class Labyrinth {
 
     newRoom = this.rooms.get(newPosition);
 
-    canMove = newRoom.enter(persona);
+    if (!newRoom.getOccupants().isEmpty()) {
+      for (Persona occupant : newRoom.getOccupants()) {
+        if (occupant.getClass() == persona.getClass()) {
+          alreadyOccupied = true;
+          break;
+        }
+      }
+    }
+
+    if (!alreadyOccupied) {
+      canMove = newRoom.enter(persona);
+    }
 
     if (canMove) {
       persona.setPosition(newPosition);
       this.rooms.get(currentRoom.getPosition()).leave(persona);
     } else {
-    	System.out.println("No way");
+    	Labyrinth.alertPlayer("No way", persona);
     }
 
     return true;
