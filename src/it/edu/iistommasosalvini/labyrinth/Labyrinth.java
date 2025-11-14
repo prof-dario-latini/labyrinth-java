@@ -57,7 +57,7 @@ public class Labyrinth {
     int nRows = positions.length;
     int nColumns = positions[0].length;
     ArrayList<Monster> monsters = new ArrayList<>();
-    int monstersAmount = Math.round((float) Math.abs(nRows - nColumns) / 2);
+    int monstersAmount = Math.round((float) Math.abs(nRows * nColumns) / 5);
     for (int r = 0; r < monstersAmount; r++) {
       monsters.add(new Monster( "monster" + r));
     }
@@ -72,7 +72,7 @@ public class Labyrinth {
   public int placeMonsters() {
 	  this.monsters = Labyrinth.generateMonsters(this.positions);
 	  int joinedMonsters = 0;
-    for (Monster monster : monsters) {
+	  for (Monster monster : monsters) {
       Room freeRoom = searchFreeRoom();
       if (freeRoom == null) {
         break;

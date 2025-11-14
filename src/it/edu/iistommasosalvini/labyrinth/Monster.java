@@ -23,7 +23,8 @@ public class Monster extends Persona{
 	 initAvailableDirections();
 	 boolean canMove = false;
 	 do {
-		int nextMove = (int) Math.random() * availableDirections.size();
+		int nextMove = (int) (Math.random() * (availableDirections.size() - 1));
+		System.out.println("nextMove " + nextMove);
 		Direction direction = availableDirections.get(nextMove);
 		canMove = this.move(direction) != null;
 		if (!canMove) {
