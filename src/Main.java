@@ -12,7 +12,7 @@ public class Main {
 
     System.out.println("What is your hero name?");
     Scanner in = new Scanner(System.in);
-    Persona hero = new Hero(in.nextLine(), 3);
+    Hero hero = new Hero(in.nextLine(), 3);
     hero.joinLabyrinth(labyrinth);
     System.out.println(hero.getName() + " your journey begins!'");
     Labyrinth.printCommands();
