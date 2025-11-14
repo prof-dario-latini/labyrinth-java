@@ -1,6 +1,7 @@
 import it.edu.iistommasosalvini.labyrinth.*;
 
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
   public static void main(String[] args) {
@@ -16,16 +17,24 @@ public class Main {
     hero.joinLabyrinth(labyrinth);
     System.out.println(hero.getName() + " your journey begins!'");
     Labyrinth.printCommands();
-    String command;
     System.out.println("Enter any key to start");
-    try{
-    	System.in.read();
+    Main.waitReturnKey();
+    System.out.println("Your run will start in:");
+    for (int cont = 5; cont > 0; cont--) {
+      System.out.println(cont + " seconds.");
+      try {
+        TimeUnit.SECONDS.sleep(1);
+      } catch (InterruptedException e) {
+        System.out.println(e.toString());
+      }
     }
-    catch(Exception e){}
-    TextUI.clearScreen();
 
+    String command;
     do {
-      System.out.println("You are in the room" + hero.getPosition().toString());
+      TextUI.clearScreen();
+      System.out.println(hero.getName() + " is in the room" + hero.getPosition().toString());
+      TextUI.printLabyrinth(labyrinth);
+      System.out.println("What is your next move?");
       command = in.nextLine().trim().toUpperCase();
       if (command.equals("QUIT")) {
         break;
@@ -33,10 +42,9 @@ public class Main {
 
       if (command.equals("HELP")) {
         Labyrinth.printCommands();
+        Main.waitReturnKey();
         continue;
       }
-
-      TextUI.clearScreen();
 
       try {
         Direction direction = Direction.valueOf(command);
@@ -45,16 +53,19 @@ public class Main {
 
         if (labyrinth.getRoomByPosition(hero.getPosition()).getOccupantsNumber() > 1) {
       	  System.out.println("You are not alone...");
+          Main.waitReturnKey();
         }
 
       } catch (IllegalArgumentException e ) {
         System.out.println("Invalid direction!");
         Labyrinth.printCommands();
+        Main.waitReturnKey();
       }
 
-      TextUI.printLabyrinth(labyrinth);
-
     } while (!hero.getPosition().equals(labyrinth.getEnd().getPosition()));
+
+    TextUI.clearScreen();
+    TextUI.printLabyrinth(labyrinth);
 
     if (command.equals("QUIT")) {
       System.out.println(hero.getName() + " quits... you better try hard next time.");
@@ -63,5 +74,14 @@ public class Main {
     }
 
     in.close();
+  }
+
+  static void waitReturnKey() {
+    try{
+      System.in.read();
+    }
+    catch(Exception e){
+      System.out.println(e.getMessage());
+    }
   }
 }
