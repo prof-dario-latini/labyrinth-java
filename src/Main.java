@@ -18,7 +18,10 @@ public class Main {
     Labyrinth.printCommands();
     String command;
     System.out.println("Enter any key to start");
-    in.next();
+    try{
+    	System.in.read();
+    }
+    catch(Exception e){}
     TextUI.clearScreen();
 
     do {
