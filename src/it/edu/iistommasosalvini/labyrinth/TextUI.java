@@ -19,14 +19,14 @@ public class TextUI {
             case 0 -> {
               System.out.print("===");
               if (room.hasDoor(Direction.NORD)) {
-                System.out.print("-");
+                System.out.print("--");
               } else {
-                System.out.print("=");
+                System.out.print("==");
               }
               System.out.print("===");
             }
             case 1,3 -> {
-              System.out.print("║     ║");
+              System.out.print("║  ➕  ║");
             }
             case 2 -> {
               if (room.hasDoor(Direction.WEST)) {
@@ -37,15 +37,18 @@ public class TextUI {
               if (!occupants.isEmpty()) {
                 if (occupants.size() == 1) {
                   if (occupants.getFirst().getClass() == Hero.class) {
-                    System.out.print("H");
+                    // 🧙‍♂️
+                    System.out.print("\uD83E\uDDD9\u200D♂\uFE0F");
                   } else {
-                    System.out.print("M");
+                    // 🧟‍♂️
+                    System.out.print("\uD83E\uDDDF\u200D♂\uFE0F");
                   }
                 } else {
-                  System.out.print("X");
+                  // 💀
+                  System.out.print("\uD83D\uDC80");
                 }
               } else {
-                System.out.print(" ");
+                System.out.print("➕");
               }
               if (room.hasDoor(Direction.EST)) {
                 System.out.print("  |");
@@ -56,9 +59,9 @@ public class TextUI {
             case 4 -> {
               System.out.print("===");
               if (room.hasDoor(Direction.SUD)) {
-                System.out.print("-");
+                System.out.print("--");
               } else {
-                System.out.print("=");
+                System.out.print("==");
               }
               System.out.print("===");
             }
