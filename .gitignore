@@ -29,3 +29,8 @@ bin/
 ### Mac OS ###
 .DS_Store
 /.idea/
+
+#Maven
+target/
+*.iml
+*.class
