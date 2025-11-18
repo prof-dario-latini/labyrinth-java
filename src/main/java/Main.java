@@ -1,12 +1,20 @@
 import it.edu.iistommasosalvini.labyrinth.*;
 
+import javax.swing.*;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
   public static void main(String[] args) {
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        initWindow();
+      }
+    });
+  }
 
-	TextUI.clearScreen();
+  static void oldGame() {
+    TextUI.clearScreen();
     System.out.println("Welcome in the Labyrinth!");
 
     Labyrinth labyrinth = new Labyrinth(4, 5);
@@ -52,7 +60,7 @@ public class Main {
         labyrinth.moveMonsters();
 
         if (labyrinth.getRoomByPosition(hero.getPosition()).getOccupantsNumber() > 1) {
-      	  System.out.println("You are not alone...");
+          System.out.println("You are not alone...");
           Main.waitReturnKey();
         }
 
@@ -83,5 +91,30 @@ public class Main {
     catch(Exception e){
       System.out.println(e.getMessage());
     }
+  }
+
+  private static void initWindow() {
+    // create a window frame and set the title in the toolbar
+    JFrame window = new JFrame("Can't Stop, Won't Stop, GameStop");
+    // when we close the window, stop the app
+    window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+    // create the jpanel to draw on.
+    // this also initializes the game loop
+    Board board = new Board();
+    // add the jpanel to the window
+    window.add(board);
+    // pass keyboard inputs to the jpanel
+    window.addKeyListener(board);
+
+    // don't allow the user to resize the window
+    window.setResizable(false);
+    // fit the window size around the components (just our jpanel).
+    // pack() should be called after setResizable() to avoid issues on some platforms
+    window.pack();
+    // open window in the center of the screen
+    window.setLocationRelativeTo(null);
+    // display the window
+    window.setVisible(true);
   }
 }
