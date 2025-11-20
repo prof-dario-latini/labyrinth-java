@@ -1,6 +1,5 @@
 package it.edu.iistommasosalvini.labyrinth;
 
-import java.awt.*;
 import java.util.List;
 
 public class TextUI {
@@ -18,7 +17,7 @@ public class TextUI {
           switch (l) {
             case 0 -> {
               System.out.print("===");
-              if (room.hasDoor(Direction.NORD)) {
+              if (room.hasDoor(Direction.NORTH)) {
                 System.out.print("--");
               } else {
                 System.out.print("==");
@@ -50,7 +49,7 @@ public class TextUI {
               } else {
                 System.out.print("➕");
               }
-              if (room.hasDoor(Direction.EST)) {
+              if (room.hasDoor(Direction.EAST)) {
                 System.out.print("  |");
               } else {
                 System.out.print("  ║");
@@ -58,7 +57,7 @@ public class TextUI {
             }
             case 4 -> {
               System.out.print("===");
-              if (room.hasDoor(Direction.SUD)) {
+              if (room.hasDoor(Direction.SOUTH)) {
                 System.out.print("--");
               } else {
                 System.out.print("==");

@@ -13,10 +13,10 @@ public class Monster extends Persona{
 
   private void initAvailableDirections() {
 	  availableDirections.clear();
-	  availableDirections.add(Direction.NORD);
-	  availableDirections.add(Direction.SUD);
+	  availableDirections.add(Direction.NORTH);
+	  availableDirections.add(Direction.SOUTH);
 	  availableDirections.add(Direction.WEST);
-	  availableDirections.add(Direction.EST);
+	  availableDirections.add(Direction.EAST);
   }
 
   public void routine() {

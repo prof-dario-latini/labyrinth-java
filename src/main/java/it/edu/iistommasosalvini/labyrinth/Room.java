@@ -11,17 +11,17 @@ public class Room {
   // private final int capacity;
 
   public Room(
-      boolean nord,
-      boolean sud,
+      boolean north,
+      boolean south,
       boolean west,
-      boolean est,
+      boolean east,
       Position position
   ) {
     this.doors = new EnumMap<>(Direction.class);
-    this.doors.put(Direction.NORD, nord);
-    this.doors.put(Direction.SUD, sud);
+    this.doors.put(Direction.NORTH, north);
+    this.doors.put(Direction.SOUTH, south);
     this.doors.put(Direction.WEST, west);
-    this.doors.put(Direction.EST, est);
+    this.doors.put(Direction.EAST, east);
     this.occupants = new ArrayList<>();
     this.position = position;
   }

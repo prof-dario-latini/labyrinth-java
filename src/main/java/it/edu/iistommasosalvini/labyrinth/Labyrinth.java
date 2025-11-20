@@ -15,7 +15,7 @@ public class Labyrinth {
 
   static public void printCommands() {
     String color = "\u001B[33m";
-    System.out.println(color + "To move, type 'nord', 'sud', 'west', 'est'.");
+    System.out.println(color + "To move, type 'north', 'south', 'west', 'east'.");
     System.out.println(color + "To quit, type 'quit'.");
     System.out.print(color + "To list of the commands, type 'help'.");
     System.out.println("\033[0m");
@@ -165,16 +165,16 @@ public class Labyrinth {
 
 
     switch (direction) {
-      case NORD -> {
+      case NORTH -> {
     	  newPosition = this.positions[personaPosition.row() - 1][personaPosition.column()];
       }
-      case SUD -> {
+      case SOUTH -> {
     	  newPosition = this.positions[personaPosition.row() + 1][personaPosition.column()];
       }
       case WEST -> {
     	  newPosition = this.positions[personaPosition.row()][personaPosition.column() - 1];
       }
-      case EST -> {
+      case EAST -> {
     	  newPosition = this.positions[personaPosition.row()][personaPosition.column() + 1];
       }
     }

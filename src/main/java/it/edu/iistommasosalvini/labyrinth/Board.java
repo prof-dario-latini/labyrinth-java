@@ -105,16 +105,16 @@ public class Board extends JPanel implements ActionListener, KeyListener {
         // depending on which arrow key was pressed, we're going to move the player by
         // one whole tile for this input
         if (key == KeyEvent.VK_UP) {
-            hero.move(Direction.WEST);
+            hero.move(Direction.NORTH);
         }
         if (key == KeyEvent.VK_RIGHT) {
-            hero.move(Direction.SUD);
+            hero.move(Direction.EAST);
         }
         if (key == KeyEvent.VK_DOWN) {
-            hero.move(Direction.EST);
+            hero.move(Direction.SOUTH);
         }
         if (key == KeyEvent.VK_LEFT) {
-            hero.move(Direction.NORD);
+            hero.move(Direction.WEST);
         }
         labyrinth.moveMonsters();
     }
