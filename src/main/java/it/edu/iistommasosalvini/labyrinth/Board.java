@@ -6,9 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Scanner;
 
 public class Board extends JPanel implements ActionListener, KeyListener {
 
@@ -17,7 +14,7 @@ public class Board extends JPanel implements ActionListener, KeyListener {
     // controls the size of the board
     public static final int TILE_SIZE = 50;
     public static final int ROWS = 18;
-    public static final int COLUMNS = 20;
+    public static final int COLUMNS = 19;
     // controls how many coins appear on the board
     public static final int NUM_COINS = 5;
     // suppress serialization warning
@@ -34,7 +31,7 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 
     public Board() {
 
-        labyrinth = new Labyrinth(5, 4);
+        labyrinth = new Labyrinth(4, 5);
         hero = new Hero("sprite", 3);
         hero.joinLabyrinth(labyrinth);
         // set the game board size
