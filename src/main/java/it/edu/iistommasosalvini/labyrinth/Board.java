@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.ImageObserver;
 
 public class Board extends JPanel implements ActionListener, KeyListener {
 
@@ -15,6 +16,11 @@ public class Board extends JPanel implements ActionListener, KeyListener {
     public static final int TILE_SIZE = 50;
     public static final int ROWS = 18;
     public static final int COLUMNS = 19;
+
+    public static final int ROOM_HEIGHT = 177;
+    public static final int ROOM_WIDTH = 190;
+    public static final int ROOM_ROWS = 4;
+    public static final int ROOM_COLUMNS = 5;
     // controls how many coins appear on the board
     public static final int NUM_COINS = 5;
     // suppress serialization warning
@@ -31,13 +37,13 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 
     public Board() {
 
-        labyrinth = new Labyrinth(4, 5);
-        hero = new Hero("sprite", 3);
+        labyrinth = new Labyrinth(ROOM_ROWS, ROOM_COLUMNS);
+        hero = new Hero("Hero", 3);
         hero.joinLabyrinth(labyrinth);
         // set the game board size
         setPreferredSize(new Dimension(TILE_SIZE * COLUMNS, TILE_SIZE * ROWS));
         // set the game board background color
-        setBackground(new Color(232, 232, 232));
+        setBackground(new Color(18, 22, 27));
 
         // initialize the game state
         // player = new Player();
@@ -75,7 +81,7 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 
         // draw our graphics.
 
-        drawBackground(g);
+        // drawBackground(g);
         drawScore(g);
         /* for (Coin coin : coins) {
             coin.draw(g, this);
@@ -84,6 +90,7 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 
         // this smooths out animations on some systems
         GraphicsUI.printLabyrinth(labyrinth, g, this);
+        drawLogo(g);
         Toolkit.getDefaultToolkit().sync();
     }
 
@@ -142,9 +149,27 @@ public class Board extends JPanel implements ActionListener, KeyListener {
         GraphicsUI.printLabyrinth(labyrinth, g, this);
     }
 
+    private void drawLogo(Graphics g) {
+        Point pos = new Point(20, 24 + (ROOM_ROWS * ROOM_HEIGHT));
+        GraphicsUI.drawLogo(pos, g, this);
+    }
+
     private void drawScore(Graphics g) {
         // set the text to be displayed
-        String text = "$"; // + player.getScore();
+        String text = ""; // + player.getScore();
+
+        if (hero.getMovements().isEmpty()) {
+            text = "Welcome in the Labyrinth!";
+        } else
+        if (labyrinth.getRoomByPosition(hero.getPosition()).getOccupantsNumber() > 1) {
+            text = "You are not alone...";
+        } else
+        if (hero.getPosition().equals(labyrinth.getEnd().getPosition())) {
+            text = hero.getName() + " wins!";
+        } else {
+            text = hero.getMovements().size() + " moves";
+        }
+
         // we need to cast the Graphics to Graphics2D to draw nicer text
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(
@@ -157,19 +182,19 @@ public class Board extends JPanel implements ActionListener, KeyListener {
             RenderingHints.KEY_FRACTIONALMETRICS,
             RenderingHints.VALUE_FRACTIONALMETRICS_ON);
         // set the text color and font
-        g2d.setColor(new Color(30, 201, 139));
-        g2d.setFont(new Font("Lato", Font.BOLD, 25));
+        g2d.setColor(new Color(177, 90, 14));
+        g2d.setFont(new Font("Book Antiqua", Font.BOLD, 25));
         // draw the score in the bottom center of the screen
         // https://stackoverflow.com/a/27740330/4655368
         FontMetrics metrics = g2d.getFontMetrics(g2d.getFont());
         // the text will be contained within this rectangle.
         // here I've sized it to be the entire bottom row of board tiles
-        Rectangle rect = new Rectangle(0, TILE_SIZE * (ROWS - 1), TILE_SIZE * COLUMNS, TILE_SIZE);
+        Rectangle rect = new Rectangle(0, ROOM_HEIGHT * ROOM_ROWS, TILE_SIZE * COLUMNS - 322, TILE_SIZE);
         // determine the x coordinate for the text
-        int x = rect.x + (rect.width - metrics.stringWidth(text)) / 2;
+        int x = 360 + rect.x + (rect.width - metrics.stringWidth(text)) / 2;
         // determine the y coordinate for the text
         // (note we add the ascent, as in java 2d 0 is top of the screen)
-        int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
+        int y = 80 + rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
         // draw the string
         g2d.drawString(text, x, y);
     }

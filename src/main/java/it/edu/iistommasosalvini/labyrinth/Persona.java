@@ -42,6 +42,10 @@ public class Persona {
     this.life = life;
   }
 
+  public List<Direction> getMovements() {
+    return movements;
+  }
+
   public int changeLife(Integer amount) {
     if (amount == null) {
       return this.life;

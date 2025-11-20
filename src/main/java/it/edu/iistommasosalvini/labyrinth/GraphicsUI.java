@@ -15,12 +15,14 @@ public class GraphicsUI {
 
   static final Map<String, String> SPRITES = Map.of(
       "room", "assets/graphics/dungeon/room/room.png",
+      "south-perimeter", "assets/graphics/dungeon/room/south-perimeter.png",
       "north-door", "assets/graphics/dungeon/room/doors/north.png",
       "south-door", "assets/graphics/dungeon/room/doors/south.png",
       "west-door", "assets/graphics/dungeon/room/doors/west.png",
       "east-door", "assets/graphics/dungeon/room/doors/east.png",
       "hero", "assets/graphics/hero/hero.png",
-      "monster", "assets/graphics/monster/monster.png"
+      "monster", "assets/graphics/monster/monster.png",
+      "logo",  "assets/graphics/interface/logo.png"
   );
 
   static final Map<Direction, Point> DOORS_RELATIVE_POSITIONS = Map.of(
@@ -29,6 +31,12 @@ public class GraphicsUI {
       Direction.WEST, new Point(0, 63),
       Direction.EAST, new Point(164, 63)
   );
+
+  static public void drawLogo(Point pos, Graphics g, ImageObserver observer) {
+    BufferedImage logo = loadImage("logo");
+    Image scaledLogo = logo.getScaledInstance(322, 154, Image.SCALE_SMOOTH);
+    draw(scaledLogo, pos, g, observer);
+  }
 
   static public void printLabyrinth(Labyrinth labyrinth, Graphics g, ImageObserver observer) {
     Position[][] positions = labyrinth.getPositions();
@@ -41,6 +49,11 @@ public class GraphicsUI {
         Position position = positions[r][c];
         Room room = labyrinth.getRoomByPosition(position);
         drawRoom(room, (Point) p.clone(), g, observer);
+        if (r == nRows - 1) {
+          Point perimeterPoint = (Point) p.clone();
+          perimeterPoint.translate(0, 177);
+          draw(loadImage("south-perimeter"), perimeterPoint, g, observer);
+        }
         List<Persona> occupants = room.getOccupants();
         if (!occupants.isEmpty()) {
           if (occupants.size() == 1) {
@@ -72,7 +85,7 @@ public class GraphicsUI {
     return null;
   }
 
-  static public void draw(BufferedImage image, Point pos, Graphics g, ImageObserver observer) {
+  static public void draw(Image image, Point pos, Graphics g, ImageObserver observer) {
     // with the Point class, note that pos.getX() returns a double, but
     // pos.x reliably returns an int. https://stackoverflow.com/a/30220114/4655368
     // this is also where we translate board grid position into a canvas pixel
