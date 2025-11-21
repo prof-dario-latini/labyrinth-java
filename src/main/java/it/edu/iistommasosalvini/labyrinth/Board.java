@@ -81,16 +81,12 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 
         // draw our graphics.
 
-        // drawBackground(g);
+        GraphicsUI.printLabyrinth(labyrinth, g, this);
+        drawBackground(g);
         drawScore(g);
-        /* for (Coin coin : coins) {
-            coin.draw(g, this);
-        }
-        player.draw(g, this); */
+        drawLogo(g);
 
         // this smooths out animations on some systems
-        GraphicsUI.printLabyrinth(labyrinth, g, this);
-        drawLogo(g);
         Toolkit.getDefaultToolkit().sync();
     }
 
@@ -129,28 +125,12 @@ public class Board extends JPanel implements ActionListener, KeyListener {
     }
 
     private void drawBackground(Graphics g) {
-        // draw a checkered background
-        g.setColor(new Color(214, 214, 214));
-        for (int row = 0; row < ROWS; row++) {
-            for (int col = 0; col < COLUMNS; col++) {
-                // only color every other tile
-                if ((row + col) % 2 == 1) {
-                    // draw a square tile at the current row/column position
-                    g.fillRect(
-                        col * TILE_SIZE,
-                        row * TILE_SIZE,
-                        TILE_SIZE,
-                        TILE_SIZE
-                    );
-                }
-            }
-        }
-
-        GraphicsUI.printLabyrinth(labyrinth, g, this);
+        Point pos = new Point(0, (ROOM_ROWS * ROOM_HEIGHT));
+        GraphicsUI.drawBackground(pos, g, this);
     }
 
     private void drawLogo(Graphics g) {
-        Point pos = new Point(20, 24 + (ROOM_ROWS * ROOM_HEIGHT));
+        Point pos = new Point(20, 20 + (ROOM_ROWS * ROOM_HEIGHT));
         GraphicsUI.drawLogo(pos, g, this);
     }
 

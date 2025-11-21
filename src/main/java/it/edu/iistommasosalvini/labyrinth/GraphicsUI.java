@@ -22,7 +22,8 @@ public class GraphicsUI {
       "east-door", "assets/graphics/dungeon/room/doors/east.png",
       "hero", "assets/graphics/hero/hero.png",
       "monster", "assets/graphics/monster/monster.png",
-      "logo",  "assets/graphics/interface/logo.png"
+      "logo",  "assets/graphics/interface/logo.png",
+      "background",  "assets/graphics/interface/bg.png"
   );
 
   static final Map<Direction, Point> DOORS_RELATIVE_POSITIONS = Map.of(
@@ -38,6 +39,14 @@ public class GraphicsUI {
     draw(scaledLogo, pos, g, observer);
   }
 
+  static public void drawBackground(Point pos, Graphics g, ImageObserver observer) {
+    Point bgPoint = (Point) pos.clone();
+    bgPoint.translate(0, 17);
+    BufferedImage bg = loadImage("background");
+    Image scaledBg = bg.getScaledInstance(947, 172, Image.SCALE_SMOOTH);
+    draw(scaledBg, bgPoint, g, observer);
+  }
+
   static public void printLabyrinth(Labyrinth labyrinth, Graphics g, ImageObserver observer) {
     Position[][] positions = labyrinth.getPositions();
     int nRows = positions.length;
@@ -51,7 +60,7 @@ public class GraphicsUI {
         drawRoom(room, (Point) p.clone(), g, observer);
         if (r == nRows - 1) {
           Point perimeterPoint = (Point) p.clone();
-          perimeterPoint.translate(0, 177);
+          perimeterPoint.translate(0, 177 );
           draw(loadImage("south-perimeter"), perimeterPoint, g, observer);
         }
         List<Persona> occupants = room.getOccupants();
