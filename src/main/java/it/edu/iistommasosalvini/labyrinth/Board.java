@@ -162,7 +162,7 @@ public class Board extends JPanel implements ActionListener, KeyListener {
             RenderingHints.KEY_FRACTIONALMETRICS,
             RenderingHints.VALUE_FRACTIONALMETRICS_ON);
         // set the text color and font
-        g2d.setColor(new Color(177, 90, 14));
+        g2d.setColor(new Color(8, 10, 12));
         g2d.setFont(new Font("Book Antiqua", Font.BOLD, 25));
         // draw the score in the bottom center of the screen
         // https://stackoverflow.com/a/27740330/4655368
@@ -171,12 +171,19 @@ public class Board extends JPanel implements ActionListener, KeyListener {
         // here I've sized it to be the entire bottom row of board tiles
         Rectangle rect = new Rectangle(0, ROOM_HEIGHT * ROOM_ROWS, TILE_SIZE * COLUMNS - 322, TILE_SIZE);
         // determine the x coordinate for the text
-        int x = 360 + rect.x + (rect.width - metrics.stringWidth(text)) / 2;
+        int x = 362 + rect.x + (rect.width - metrics.stringWidth(text)) / 2;
         // determine the y coordinate for the text
         // (note we add the ascent, as in java 2d 0 is top of the screen)
-        int y = 80 + rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
+        int y = 82 + rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
         // draw the string
         g2d.drawString(text, x, y);
+        g2d.setColor(new Color(177, 90, 14));
+        x = 360 + rect.x + (rect.width - metrics.stringWidth(text)) / 2;
+        // determine the y coordinate for the text
+        // (note we add the ascent, as in java 2d 0 is top of the screen)
+        y = 80 + rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
+        g2d.drawString(text, x, y);
+
     }
 
     /* private ArrayList<Coin> populateCoins() {
