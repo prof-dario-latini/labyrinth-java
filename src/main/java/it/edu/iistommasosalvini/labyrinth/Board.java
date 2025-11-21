@@ -1,0 +1,220 @@
+package it.edu.iistommasosalvini.labyrinth;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.image.ImageObserver;
+
+public class Board extends JPanel implements ActionListener, KeyListener {
+
+    // controls the delay between each tick in ms
+    private final int DELAY = 25;
+    // controls the size of the board
+    public static final int TILE_SIZE = 50;
+    public static final int ROWS = 18;
+    public static final int COLUMNS = 19;
+
+    public static final int ROOM_HEIGHT = 177;
+    public static final int ROOM_WIDTH = 190;
+    public static final int ROOM_ROWS = 4;
+    public static final int ROOM_COLUMNS = 5;
+    // controls how many coins appear on the board
+    public static final int NUM_COINS = 5;
+    // suppress serialization warning
+    private static final long serialVersionUID = 490905409104883233L;
+
+    // keep a reference to the timer object that triggers actionPerformed() in
+    // case we need access to it in another method
+    private Timer timer;
+    // objects that appear on the game board
+    // private Player player;
+    // private ArrayList<Coin> coins;
+    Labyrinth labyrinth;
+    Hero hero;
+
+    public Board() {
+
+        labyrinth = new Labyrinth(ROOM_ROWS, ROOM_COLUMNS);
+        hero = new Hero("Hero", 3);
+        hero.joinLabyrinth(labyrinth);
+        // set the game board size
+        setPreferredSize(new Dimension(TILE_SIZE * COLUMNS, TILE_SIZE * ROWS));
+        // set the game board background color
+        setBackground(new Color(18, 22, 27));
+
+        // initialize the game state
+        // player = new Player();
+        // coins = populateCoins();
+
+        // this timer will call the actionPerformed() method every DELAY ms
+        timer = new Timer(DELAY, this);
+        timer.start();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // this method is called by the timer every DELAY ms.
+        // use this space to update the state of your game or animation
+        // before the graphics are redrawn.
+
+        // prevent the player from disappearing off the board
+        // player.tick();
+
+        // give the player points for collecting coins
+        // collectCoins();
+
+        // calling repaint() will trigger paintComponent() to run again,
+        // which will refresh/redraw the graphics.
+        repaint();
+    }
+
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        // when calling g.drawImage() we can use "this" for the ImageObserver
+        // because Component implements the ImageObserver interface, and JPanel
+        // extends from Component. So "this" Board instance, as a Component, can
+        // react to imageUpdate() events triggered by g.drawImage()
+
+        // draw our graphics.
+
+        GraphicsUI.printLabyrinth(labyrinth, g, this);
+        drawBackground(g);
+        drawScore(g);
+        drawLogo(g);
+
+        // this smooths out animations on some systems
+        Toolkit.getDefaultToolkit().sync();
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        // this is not used but must be defined as part of the KeyListener interface
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        // react to key down events
+        // every keyboard get has a certain code. get the value of that code from the
+        // keyboard event so that we can compare it to KeyEvent constants
+        int key = e.getKeyCode();
+
+        // depending on which arrow key was pressed, we're going to move the player by
+        // one whole tile for this input
+        if (key == KeyEvent.VK_UP) {
+            hero.move(Direction.NORTH);
+        }
+        if (key == KeyEvent.VK_RIGHT) {
+            hero.move(Direction.EAST);
+        }
+        if (key == KeyEvent.VK_DOWN) {
+            hero.move(Direction.SOUTH);
+        }
+        if (key == KeyEvent.VK_LEFT) {
+            hero.move(Direction.WEST);
+        }
+        labyrinth.moveMonsters();
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        // react to key up events
+    }
+
+    private void drawBackground(Graphics g) {
+        Point pos = new Point(0, (ROOM_ROWS * ROOM_HEIGHT));
+        GraphicsUI.drawBackground(pos, g, this);
+    }
+
+    private void drawLogo(Graphics g) {
+        Point pos = new Point(20, 20 + (ROOM_ROWS * ROOM_HEIGHT));
+        GraphicsUI.drawLogo(pos, g, this);
+    }
+
+    private void drawScore(Graphics g) {
+        // set the text to be displayed
+        String text = ""; // + player.getScore();
+
+        if (hero.getMovements().isEmpty()) {
+            text = "Welcome in the Labyrinth!";
+        } else
+        if (labyrinth.getRoomByPosition(hero.getPosition()).getOccupantsNumber() > 1) {
+            text = "You are not alone...";
+        } else
+        if (hero.getPosition().equals(labyrinth.getEnd().getPosition())) {
+            text = hero.getName() + " wins!";
+        } else {
+            text = hero.getMovements().size() + " moves";
+        }
+
+        // we need to cast the Graphics to Graphics2D to draw nicer text
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setRenderingHint(
+            RenderingHints.KEY_TEXT_ANTIALIASING,
+            RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        g2d.setRenderingHint(
+            RenderingHints.KEY_RENDERING,
+            RenderingHints.VALUE_RENDER_QUALITY);
+        g2d.setRenderingHint(
+            RenderingHints.KEY_FRACTIONALMETRICS,
+            RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+        // set the text color and font
+        g2d.setColor(new Color(8, 10, 12));
+        g2d.setFont(new Font("Book Antiqua", Font.BOLD, 25));
+        // draw the score in the bottom center of the screen
+        // https://stackoverflow.com/a/27740330/4655368
+        FontMetrics metrics = g2d.getFontMetrics(g2d.getFont());
+        // the text will be contained within this rectangle.
+        // here I've sized it to be the entire bottom row of board tiles
+        Rectangle rect = new Rectangle(0, ROOM_HEIGHT * ROOM_ROWS, TILE_SIZE * COLUMNS - 322, TILE_SIZE);
+        // determine the x coordinate for the text
+        int x = 362 + rect.x + (rect.width - metrics.stringWidth(text)) / 2;
+        // determine the y coordinate for the text
+        // (note we add the ascent, as in java 2d 0 is top of the screen)
+        int y = 82 + rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
+        // draw the string
+        g2d.drawString(text, x, y);
+        g2d.setColor(new Color(177, 90, 14));
+        x = 360 + rect.x + (rect.width - metrics.stringWidth(text)) / 2;
+        // determine the y coordinate for the text
+        // (note we add the ascent, as in java 2d 0 is top of the screen)
+        y = 80 + rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
+        g2d.drawString(text, x, y);
+
+    }
+
+    /* private ArrayList<Coin> populateCoins() {
+        ArrayList<Coin> coinList = new ArrayList<>();
+        Random rand = new Random();
+
+        // create the given number of coins in random positions on the board.
+        // note that there is not check here to prevent two coins from occupying the same
+        // spot, nor to prevent coins from spawning in the same spot as the player
+        for (int i = 0; i < NUM_COINS; i++) {
+            int coinX = rand.nextInt(COLUMNS);
+            int coinY = rand.nextInt(ROWS);
+            coinList.add(new Coin(coinX, coinY));
+        }
+
+        return coinList;
+    }
+
+    private void collectCoins() {
+        // allow player to pickup coins
+        ArrayList<Coin> collectedCoins = new ArrayList<>();
+        for (Coin coin : coins) {
+            // if the player is on the same tile as a coin, collect it
+            if (player.getPos().equals(coin.getPos())) {
+                // give the player some points for picking this up
+                player.addScore(100);
+                collectedCoins.add(coin);
+            }
+        }
+        // remove collected coins from the board
+        coins.removeAll(collectedCoins);
+    }*/
+
+}
