@@ -81,7 +81,7 @@ See the [LICENSE](./LICENSE) file for details.
 Computer Science Teacher – IIS Tommaso Salvini - Polo Tecnologico, of Rome
 📧 [School official site](https://www.iistommasosalvini.edu.it/)
 
-## 🫱🏼‍🫲🏾 Credits
+## 🤝 Credits
 
 Thanks to Ben Johnson for the project:
 [java_2d_game](https://github.com/learncodebygaming/java_2d_game)
