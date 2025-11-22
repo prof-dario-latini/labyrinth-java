@@ -11,7 +11,7 @@ import java.awt.image.ImageObserver;
 public class Board extends JPanel implements ActionListener, KeyListener {
 
     // controls the delay between each tick in ms
-    private final int DELAY = 25;
+    private final int DELAY = 150;
     // controls the size of the board
     public static final int TILE_SIZE = 50;
     public static final int ROWS = 18;
@@ -104,19 +104,22 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 
         // depending on which arrow key was pressed, we're going to move the player by
         // one whole tile for this input
+        int heroMovements = hero.getMovements().size();
         if (key == KeyEvent.VK_UP) {
             hero.move(Direction.NORTH);
-        }
+        } else
         if (key == KeyEvent.VK_RIGHT) {
             hero.move(Direction.EAST);
-        }
+        } else
         if (key == KeyEvent.VK_DOWN) {
             hero.move(Direction.SOUTH);
-        }
+        } else
         if (key == KeyEvent.VK_LEFT) {
             hero.move(Direction.WEST);
         }
-        labyrinth.moveMonsters();
+        if (hero.getMovements().size() > heroMovements) {
+            labyrinth.moveMonsters();
+        }
     }
 
     @Override

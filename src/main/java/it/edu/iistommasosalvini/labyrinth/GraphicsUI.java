@@ -12,18 +12,25 @@ import java.util.Map;
 
 public class GraphicsUI {
 
+  static int heroFrameCount = 0;
+  static final int heroTotalFrame = 4;
+
+  static int monsterFrameCount = 0;
+  static final int monsterTotalFrame = 4;
+
+  static final String ASSETS_PATH = "assets/graphics/";
 
   static final Map<String, String> SPRITES = Map.of(
-      "room", "assets/graphics/dungeon/room/room.png",
-      "south-perimeter", "assets/graphics/dungeon/room/south-perimeter.png",
-      "north-door", "assets/graphics/dungeon/room/doors/north.png",
-      "south-door", "assets/graphics/dungeon/room/doors/south.png",
-      "west-door", "assets/graphics/dungeon/room/doors/west.png",
-      "east-door", "assets/graphics/dungeon/room/doors/east.png",
-      "hero", "assets/graphics/hero/hero.png",
-      "monster", "assets/graphics/monster/monster.png",
-      "logo",  "assets/graphics/interface/logo.png",
-      "background",  "assets/graphics/interface/bg.png"
+      "room", "dungeon/room/room",
+      "south-perimeter", "dungeon/room/south-perimeter",
+      "north-door", "dungeon/room/doors/north",
+      "south-door", "dungeon/room/doors/south",
+      "west-door", "dungeon/room/doors/west",
+      "east-door", "dungeon/room/doors/east",
+      "hero", "hero/hero",
+      "monster", "monster/monster",
+      "logo",  "interface/logo",
+      "background",  "interface/bg"
   );
 
   static final Map<Direction, Point> DOORS_RELATIVE_POSITIONS = Map.of(
@@ -34,7 +41,7 @@ public class GraphicsUI {
   );
 
   static public void drawLogo(Point pos, Graphics g, ImageObserver observer) {
-    BufferedImage logo = loadImage("logo");
+    BufferedImage logo = loadImage(getPathname("logo"));
     Image scaledLogo = logo.getScaledInstance(322, 154, Image.SCALE_SMOOTH);
     draw(scaledLogo, pos, g, observer);
   }
@@ -42,7 +49,7 @@ public class GraphicsUI {
   static public void drawBackground(Point pos, Graphics g, ImageObserver observer) {
     Point bgPoint = (Point) pos.clone();
     bgPoint.translate(0, 17);
-    BufferedImage bg = loadImage("background");
+    BufferedImage bg = loadImage(getPathname("background"));
     Image scaledBg = bg.getScaledInstance(947, 172, Image.SCALE_SMOOTH);
     draw(scaledBg, bgPoint, g, observer);
   }
@@ -51,6 +58,8 @@ public class GraphicsUI {
     Position[][] positions = labyrinth.getPositions();
     int nRows = positions.length;
     int nColumns = positions[0].length;
+
+    monsterFrameCount = (monsterFrameCount + 1) % monsterTotalFrame;
 
     for (int r = 0; r < nRows; r++) {
       for (int c = 0; c < nColumns; c++) {
@@ -61,37 +70,54 @@ public class GraphicsUI {
         if (r == nRows - 1) {
           Point perimeterPoint = (Point) p.clone();
           perimeterPoint.translate(0, 177 );
-          draw(loadImage("south-perimeter"), perimeterPoint, g, observer);
+          draw(loadImage(getPathname("south-perimeter")), perimeterPoint, g, observer);
         }
         List<Persona> occupants = room.getOccupants();
         if (!occupants.isEmpty()) {
           if (occupants.size() == 1) {
-            p.translate(80, 80);
+            p.translate(78, 78);
             if (occupants.getFirst().getClass() == Hero.class) {
-              draw(loadImage("hero"), p, g, observer);
+              draw(loadHero(), p, g, observer);
             } else {
-              draw(loadImage("monster"), p, g, observer);
+              draw(loadMonster(), p, g, observer);
             }
           } else {
-            p.translate(50, 80);
-            draw(loadImage("hero"), p, g, observer);
-            p.translate(60, 0);
-            draw(loadImage("monster"), p, g, observer);
+            p.translate(48, 78);
+            draw(loadHero(), p, g, observer);
+            p.translate(58, 0);
+            draw(loadMonster(), p, g, observer);
           }
         }
       }
     }
   }
 
-  static private BufferedImage loadImage(String type) {
+  static private String getPathname(String type) {
+    return ASSETS_PATH + SPRITES.get(type) + ".png";
+  }
+
+  static private String getPathname(String type, int frame) {
+    return ASSETS_PATH + SPRITES.get(type) + frame + ".png";
+  }
+
+  static private BufferedImage loadImage(String pathname) {
     try {
       // you can use just the filename if the image file is in your
       // project folder, otherwise you need to provide the file path.
-      return ImageIO.read(new File(SPRITES.get(type)));
+      return ImageIO.read(new File(pathname));
     } catch (IOException exc) {
-      System.out.println("Error opening image file: " + exc.getMessage());
+      System.out.println("Error opening image file: " + pathname + exc.getMessage());
     }
     return null;
+  }
+
+  static private BufferedImage loadHero() {
+    heroFrameCount = (heroFrameCount + 1) % heroTotalFrame;
+    return loadImage(getPathname("hero", heroFrameCount));
+  }
+
+  static private BufferedImage loadMonster() {
+    return loadImage(getPathname("monster", monsterFrameCount));
   }
 
   static public void draw(Image image, Point pos, Graphics g, ImageObserver observer) {
@@ -108,7 +134,7 @@ public class GraphicsUI {
   }
 
   static private void drawRoom(Room room, Point pos, Graphics g, ImageObserver observer) {
-    draw(loadImage("room"), pos, g, observer);
+    draw(loadImage(getPathname("room")), pos, g, observer);
     if (room.hasDoor(Direction.NORTH)) {
       drawDoor(room, "north-door", Direction.NORTH, pos, g, observer);
     }
@@ -126,6 +152,6 @@ public class GraphicsUI {
   static private void drawDoor(Room room, String name, Direction d, Point pos, Graphics g, ImageObserver observer) {
     Point doorPosition = (Point) pos.clone();
     doorPosition.translate(DOORS_RELATIVE_POSITIONS.get(d).x, DOORS_RELATIVE_POSITIONS.get(d).y);
-    draw(loadImage(name), doorPosition, g, observer);
+    draw(loadImage(getPathname(name)), doorPosition, g, observer);
   }
 }
